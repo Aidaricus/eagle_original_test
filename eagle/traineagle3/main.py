@@ -40,6 +40,7 @@ set_seed(0)
 from cnets import Model
 from configs import EConfig
 from datasets import load_dataset
+import datasets
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 
@@ -207,6 +208,9 @@ tokenizer = AutoTokenizer.from_pretrained(args.basepath)
 # traindataset = build_dataset_rank(tokenizer, args.trainpath)
 # testdataset = build_dataset_rank(tokenizer, args.testpath)
 fulldataset = build_dataset_rank(tokenizer, args.trainpath)
+fulldataset = load_dataset("json", data_files={"train": [args.dataset_path]})["train"]
+fulldataset = Dataset(dataset=fulldataset)
+
 traindataset = fulldataset[:0.9 * len(fulldataset)]
 testdataset = fulldataset[0.9 * len(fulldataset):]
 
@@ -354,3 +358,14 @@ for epoch in range(start_epoch, num_epochs):
     model_engine.save_16bit_model(f"{args.savedir}/state_{epoch}", exclude_frozen_parameters=True)
     if epoch % 10 == 0:
         deepspeed.DeepSpeedEngine.save_checkpoint(model_engine, save_dir=f"{args.savedir}/state_{epoch}")
+
+
+class Dataset(torch.utils.data.Dataset):
+    def __init__(self, dataset: datasets.Dataset) -> None:
+        self._dataset = dataset
+    
+    def __len__(self) -> int:
+        return len(self._dataset)
+    
+    def __getitem__(self, index: int) -> dict:
+        return self._dataset[index]
