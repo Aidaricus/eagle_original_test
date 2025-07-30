@@ -90,6 +90,7 @@ def build_dataset_rank(
                 messages.append(
                     {"role": role, "content": sentence["value"]}
                 )
+            print(f"messages = {messages}")
             conversation = tokenizer.apply_chat_template(
                 messages,
                 tokenize=False,
