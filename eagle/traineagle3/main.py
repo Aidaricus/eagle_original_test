@@ -203,8 +203,12 @@ class DataCollatorWithPadding:
 
 
 tokenizer = AutoTokenizer.from_pretrained(args.basepath)
-traindataset = build_dataset_rank(tokenizer, args.trainpath)
-testdataset = build_dataset_rank(tokenizer, args.testpath)
+# traindataset = build_dataset_rank(tokenizer, args.trainpath)
+# testdataset = build_dataset_rank(tokenizer, args.testpath)
+fulldataset = build_dataset_rank(tokenizer, args.trainpath)
+traindataset = fulldataset[:0.9 * len(fulldataset)]
+testdataset = fulldataset[0.9 * len(fulldataset):]
+
 
 config = EConfig.from_pretrained(train_config["config_path"])
 model = Model(config, ds_config, train_config, path=args.basepath, load_emb=True, load_head=True)
