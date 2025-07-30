@@ -161,13 +161,14 @@ def build_dataset_rank(
 
         return new_examples
 
-    ds1 = ds1.map(
-        preprocess_function,
-        batched=True,
-        num_proc=num_proc,
-        remove_columns=original_columns1,
-        load_from_cache_file=False
-    )
+    if args.preprocess_needed:
+        ds1 = ds1.map(
+            preprocess_function,
+            batched=True,
+            num_proc=num_proc,
+            remove_columns=original_columns1,
+            load_from_cache_file=False
+        )
 
 
     ds1.set_format(type="torch")
