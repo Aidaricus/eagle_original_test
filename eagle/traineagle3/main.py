@@ -161,14 +161,14 @@ def build_dataset_rank(
 
         return new_examples
 
-    if args.preprocess_needed:
-        ds1 = ds1.map(
-            preprocess_function,
-            batched=True,
-            num_proc=num_proc,
-            remove_columns=original_columns1,
-            load_from_cache_file=False
-        )
+    
+    ds1 = ds1.map(
+        preprocess_function,
+        batched=True,
+        num_proc=num_proc,
+        remove_columns=original_columns1,
+        load_from_cache_file=False
+    )
 
 
     ds1.set_format(type="torch")
@@ -209,8 +209,10 @@ class DataCollatorWithPadding:
 tokenizer = AutoTokenizer.from_pretrained(args.basepath)
 # traindataset = build_dataset_rank(tokenizer, args.trainpath)
 # testdataset = build_dataset_rank(tokenizer, args.testpath)
-fulldataset = build_dataset_rank(tokenizer, args.trainpath)
-fulldataset = load_dataset("json", data_files={"train": [args.dataset_path]})["train"]
+if args.preprocess_needed:
+    fulldataset = build_dataset_rank(tokenizer, args.trainpath)
+else:
+    fulldataset = load_dataset("json", data_files={"train": [args.trainpath]})["train"]
 fulldataset = Dataset(dataset=fulldataset)
 
 traindataset = fulldataset[:0.9 * len(fulldataset)]
