@@ -19,7 +19,7 @@ with open(deepspeed_config) as f:
     ds_config = json.load(f)
 train_config = {
     "bs": ds_config["train_micro_batch_size_per_gpu"],
-    "num_epochs": 40,
+    "num_epochs": 1,
     "num_workers": 2,
     "max_len": 2048,
     "config_path": "config.json",
