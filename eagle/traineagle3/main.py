@@ -9,6 +9,7 @@ parser.add_argument('--testpath', type=str,
                     default="/home/lyh/code/nlp/developing/vllmbase/vllm/gedata/0318.json")
 parser.add_argument('--savedir', type=str, default='0')
 parser.add_argument("--local_rank", type=int, default=-1, help="local_rank for distributed training on gpus")
+parser.add_argument('--preprocess_needed', type=bool, default=True, help="If you need to run build_dataset_rank place a True flag")
 parser = deepspeed.add_config_arguments(parser)
 args = parser.parse_args()
 import json
