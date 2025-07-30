@@ -213,7 +213,7 @@ if args.preprocess_needed:
     print("HELLO")
     fulldataset = build_dataset_rank(tokenizer, args.trainpath)
 else:
-    fulldataset = load_dataset("json", data_files={"train": [args.trainpath]})["train"]
+    fulldataset = load_dataset("json", data_files=args.trainpath)
 fulldataset = Dataset(dataset=fulldataset)
 
 traindataset = fulldataset[:0.9 * len(fulldataset)]
